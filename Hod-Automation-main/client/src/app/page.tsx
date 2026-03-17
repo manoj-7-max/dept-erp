@@ -44,7 +44,7 @@ export default function SplitLoginPage() {
       const isStudent = selectedRole === 'student';
       const apiUrl = isStudent 
         ? 'http://localhost:5001/api/auth/login' 
-        : 'http://localhost:5000/api/auth/login';
+        : 'http://localhost:5002/api/auth/login';
 
       const loginData = isStudent 
         ? { registerNumber: email, password } // Student uses registerNumber but we use the email field for it
@@ -274,12 +274,14 @@ export default function SplitLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-gray-900 font-bold mb-2 text-xs uppercase tracking-widest">Email Address</label>
+              <label className="block text-gray-900 font-bold mb-2 text-xs uppercase tracking-widest">
+                {selectedRole === 'student' ? 'Register Number / ID' : 'Email Address'}
+              </label>
               <input
-                type="email"
+                type={selectedRole === 'student' ? "text" : "email"}
                 className={`w-full p-4 rounded-2xl bg-gray-100 border border-gray-200 outline-none transition-all shadow-inner focus:bg-white focus:ring-4 text-gray-900 font-semibold placeholder:text-gray-500 placeholder:font-medium opacity-100 ${getFocusColor()}`}
                 value={email}
-                placeholder="email@college.edu"
+                placeholder={selectedRole === 'student' ? "e.g. CS2023001" : "email@college.edu"}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />

@@ -262,7 +262,7 @@ const Profile = () => {
                         <div style={notifStyles.actions}>
                             <button
                                 style={notifStyles.viewBtn}
-                                onClick={() => { setShowNotification(false); navigate('/dashboard/circular'); }}
+                                onClick={() => { setShowNotification(false); router.push('/student/dashboard/circular'); }}
                                 onMouseOver={e => { e.currentTarget.style.background = '#4f46e5'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                                 onMouseOut={e => { e.currentTarget.style.background = '#6366f1'; e.currentTarget.style.transform = 'translateY(0)'; }}
                             >
@@ -477,7 +477,7 @@ const Profile = () => {
                 <div className="d-circular-widget">
                     <div className="d-widget-header">
                         <h3><Calendar size={18} color="var(--primary)" /> Recent Circulars</h3>
-                        <Link href="/dashboard/circular" style={{ color: 'var(--primary)', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontWeight: 600 }}>
+                        <Link href="/student/dashboard/circular" style={{ color: 'var(--primary)', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontWeight: 600 }}>
                             View All <ArrowRight size={14} />
                         </Link>
                     </div>
@@ -486,7 +486,7 @@ const Profile = () => {
                             <div style={{ color: 'var(--text-muted)', fontSize: '13px', textAlign: 'center', padding: '10px 0' }}>No recent circulars available.</div>
                         ) : (
                             recentCirculars.map(circ => (
-                                <div key={circ._id} className="d-circular-item" onClick={() => router.push('/dashboard/circular')}>
+                                <div key={circ._id} className="d-circular-item" onClick={() => router.push('/student/dashboard/circular')}>
                                     <div className="d-ci-top">
                                         <span className="d-ci-title">{circ.title}</span>
                                         <span className={`c-badge bg-${circ.category.toLowerCase()}`} style={{fontSize: '9px', padding: '2px 6px'}}>{circ.category}</span>

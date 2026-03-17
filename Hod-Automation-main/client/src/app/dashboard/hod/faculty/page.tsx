@@ -30,7 +30,7 @@ export default function FacultyManagement() {
 
     useEffect(() => {
         if (token) {
-            fetch('http://localhost:5000/api/hod/faculty', {
+            fetch('http://localhost:5002/api/hod/faculty', {
                 headers: { 'x-auth-token': token }
             })
                 .then(res => res.json())
@@ -52,7 +52,7 @@ export default function FacultyManagement() {
 
     const handleSave = async (id: string) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/hod/faculty/${id}`, {
+            const res = await fetch(`http://localhost:5002/api/hod/faculty/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export default function FacultyManagement() {
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure?')) {
             try {
-                const res = await fetch(`http://localhost:5000/api/hod/faculty/${id}`, {
+                const res = await fetch(`http://localhost:5002/api/hod/faculty/${id}`, {
                     method: 'DELETE',
                     headers: { 'x-auth-token': token || '' }
                 });

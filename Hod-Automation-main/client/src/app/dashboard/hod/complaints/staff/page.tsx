@@ -16,7 +16,7 @@ export default function HODComplaintDashboard() {
     }, [token]);
 
     const fetchComplaints = () => {
-        fetch('http://localhost:5000/api/portal/complaints', {
+        fetch('http://localhost:5002/api/portal/complaints', {
             headers: { 'x-auth-token': token || '' }
         })
         .then(res => res.json())
@@ -29,7 +29,7 @@ export default function HODComplaintDashboard() {
             const bodyData: any = { status };
             if (comment) bodyData.newComment = comment;
 
-            const res = await fetch(`http://localhost:5000/api/portal/complaint/${id}`, {
+            const res = await fetch(`http://localhost:5002/api/portal/complaint/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token || '' },
                 body: JSON.stringify(bodyData)

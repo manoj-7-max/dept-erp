@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 export default function DashboardPage() {
   const router = useRouter();
   useEffect(() => {
-    router.replace('/dashboard/profile');
+    router.replace('/student/dashboard/profile');
   }, [router]);
   return null;
 }

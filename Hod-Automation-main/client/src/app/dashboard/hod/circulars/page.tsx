@@ -93,7 +93,7 @@ export default function CircularsManagement() {
         setCirculars(mockCirculars);
 
         // try {
-        //     const res = await fetch('http://localhost:5000/api/portal/circulars', {
+        //     const res = await fetch('http://localhost:5002/api/portal/circulars', {
         //         headers: { 'x-auth-token': token || '' }
         //     });
         //     const data = await res.json();
@@ -107,7 +107,7 @@ export default function CircularsManagement() {
         e.preventDefault();
         alert('Circular formulation complete. Ready for API integration with new payload structure.');
         // try {
-        //     const res = await fetch('http://localhost:5000/api/portal/circular', {
+        //     const res = await fetch('http://localhost:5002/api/portal/circular', {
         //         method: 'POST',
         //         headers: {
         //             'Content-Type': 'application/json',

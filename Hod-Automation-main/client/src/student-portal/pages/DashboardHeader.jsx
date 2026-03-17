@@ -117,7 +117,7 @@ const DashboardHeader = () => {
                     color={summary.attendancePercentage < 85 ? '#f59e0b' : '#22c55e'}
                     icon={summary.attendancePercentage < 85 ? AlertTriangle : CheckCircle}
                     suffix="%"
-                    onClick={() => router.push('/dashboard/attendance')}
+                    onClick={() => router.push('/student/dashboard/attendance')}
                     subLabel={summary.attendancePercentage < 85 ? 'Low' : 'Good'}
                 />
 
@@ -127,7 +127,7 @@ const DashboardHeader = () => {
                     label="Backlogs"
                     color={arrearCount > 0 ? '#ef4444' : '#22c55e'}
                     icon={XOctagon}
-                    onClick={() => router.push('/dashboard/academic-records?filterBacklogs=true')}
+                    onClick={() => router.push('/student/dashboard/academic-records?filterBacklogs=true')}
                 />
 
                 <CircularGauge

@@ -18,7 +18,7 @@ const Login = () => {
         setError('');
         try {
             await login(registerNumber, password);
-            router.push('/dashboard/profile');
+            router.push('/student/dashboard/profile');
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Please verify credentials.');
         } finally {

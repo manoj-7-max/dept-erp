@@ -418,7 +418,7 @@ const StudentDocuments = () => {
                                                         <Eye size={18} />
                                                     </button>
                                                     <a
-                                                        href={`http://localhost:5000${doc.fileUrl}`}
+                                                        href={`http://localhost:5002${doc.fileUrl}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         title="Download"
@@ -465,14 +465,14 @@ const StudentDocuments = () => {
                         </div>
                         <div className="card-body" style={{ flexGrow: 1, padding: 0, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#0f0f0f', minHeight: '400px' }}>
                             {previewDoc.fileType && previewDoc.fileType.includes('image') ? (
-                                <img src={`http://localhost:5000${previewDoc.fileUrl}`} alt={previewDoc.documentName} style={{ maxWidth: '100%', maxHeight: '60vh', objectFit: 'contain' }} />
+                                <img src={`http://localhost:5002${previewDoc.fileUrl}`} alt={previewDoc.documentName} style={{ maxWidth: '100%', maxHeight: '60vh', objectFit: 'contain' }} />
                             ) : previewDoc.fileType && previewDoc.fileType.includes('pdf') ? (
-                                <iframe src={`http://localhost:5000${previewDoc.fileUrl}`} title={previewDoc.documentName} style={{ width: '100%', height: '60vh', border: 'none' }} />
+                                <iframe src={`http://localhost:5002${previewDoc.fileUrl}`} title={previewDoc.documentName} style={{ width: '100%', height: '60vh', border: 'none' }} />
                             ) : (
                                 <div style={{ textAlign: 'center', padding: '2rem' }}>
                                     <File size={48} color="var(--text-secondary)" style={{ marginBottom: '1rem' }} />
                                     <p>Preview not available for this file type.</p>
-                                    <a href={`http://localhost:5000${previewDoc.fileUrl}`} download className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem' }}>
+                                    <a href={`http://localhost:5002${previewDoc.fileUrl}`} download className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem' }}>
                                         Download to View
                                     </a>
                                 </div>

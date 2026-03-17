@@ -28,7 +28,7 @@ export default function StaffComplaints() {
     }, [token, activeTab]);
 
     const fetchMyComplaints = () => {
-        fetch('http://localhost:5000/api/portal/complaints', {
+        fetch('http://localhost:5002/api/portal/complaints', {
             headers: { 'x-auth-token': token || '' }
         })
             .then(res => res.json())
@@ -39,7 +39,7 @@ export default function StaffComplaints() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/portal/complaint', {
+            const res = await fetch('http://localhost:5002/api/portal/complaint', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token || '' },
                 body: JSON.stringify(formData)

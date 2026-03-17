@@ -452,14 +452,14 @@ const Concerns = () => {
                                                             </div>
                                                         )}
                                                         {concern.attachmentFile && (
-                                                            <a href={`http://localhost:5000${concern.attachmentFile}`} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--primary)', padding: '4px 8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '4px', marginRight: '8px' }}>
+                                                            <a href={`http://localhost:5002${concern.attachmentFile}`} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--primary)', padding: '4px 8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '4px', marginRight: '8px' }}>
                                                                 <FileText size={14} /> View Document
                                                             </a>
                                                         )}
                                                         {concern.voiceFile && (
                                                             <div style={{ marginTop: '8px' }}>
                                                                 <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>Voice Recording:</span>
-                                                                <audio src={`http://localhost:5000${concern.voiceFile}`} controls style={{ height: '30px', maxWidth: '200px' }} />
+                                                                <audio src={`http://localhost:5002${concern.voiceFile}`} controls style={{ height: '30px', maxWidth: '200px' }} />
                                                             </div>
                                                         )}
                                                     </td>
