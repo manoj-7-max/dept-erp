@@ -1,0 +1,601 @@
+/* ══════════════════════════════════════════════════════════════
+   Academic Records — enhanced stylesheet (dark neon theme)
+══════════════════════════════════════════════════════════════ */
+
+.academic-records-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── Page Header ──────────────────────────────────────────────── */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* CGPA chip in header */
+.cgpa-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    border: 1px solid #6366f1;
+    border-radius: 40px;
+    padding: 10px 20px;
+    color: #a78bfa;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+}
+
+.cgpa-chip strong {
+    font-size: 20px;
+    color: #c4b5fd;
+}
+
+.cgpa-scale {
+    font-size: 12px;
+    color: #7c3aed;
+    font-weight: 400;
+}
+
+/* ── Section Title ────────────────────────────────────────────── */
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Semester Grid ────────────────────────────────────────────── */
+.semester-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.sem-box {
+    background: #020617;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.sem-box:hover {
+    border-color: var(--primary);
+    color: var(--text-main);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.18);
+}
+
+.sem-box.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+/* ── New Term Dashboard Layout ───────────────────────────── */
+.term-dashboard-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+    align-items: flex-start;
+}
+
+.term-grid-col {
+    flex: 0 0 calc(40% - 12px);
+}
+
+.semester-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.term-chart-col {
+    flex: 0 0 calc(60% - 12px);
+    width: 60%;
+}
+
+/* Override chart panel margin when inside this row */
+.term-chart-col .sg-chart-panel {
+    margin: 0;
+}
+
+/* Mobile responsive fallback */
+@media (max-width: 992px) {
+    .term-dashboard-row {
+        flex-direction: column;
+    }
+    .term-grid-col, .term-chart-col {
+        flex: 1;
+        width: 100%;
+    }
+}
+
+/* ── Assessment Tabs ──────────────────────────────────────────── */
+.assessment-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+}
+
+.assessment-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.assessment-tabs::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.tab-btn {
+    padding: 9px 18px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text-muted);
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    background: #1e293b;
+    color: var(--text-main);
+    transform: translateY(-1px);
+}
+
+.tab-btn.active {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.35);
+}
+
+/* ── SGPA Banner ──────────────────────────────────────────────── */
+.sgpa-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #0c1a36 0%, #0f2545 100%);
+    border: 1px solid #1d4ed8;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease;
+}
+
+.sgpa-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.sgpa-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #60a5fa;
+}
+
+.sgpa-scale {
+    font-size: 13px;
+    color: #3b82f6;
+    font-weight: 400;
+}
+
+/* ── Arrears Toggle Row ───────────────────────────────────────── */
+.arrears-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.arrears-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background: #0b1220;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    font-weight: 500;
+    transition: border-color 0.2s;
+    color: var(--text-muted);
+}
+
+.arrears-label:hover {
+    border-color: var(--danger);
+}
+
+.arrears-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--danger);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* ── Marks Container ──────────────────────────────────────────── */
+.marks-container {
+    background: #0b1220;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Table ────────────────────────────────────────────────────── */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.marks-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Header row */
+.marks-table th {
+    background-color: #0f172a;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+/* Sortable header */
+.th-sort {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+}
+
+.th-sort:hover {
+    color: var(--text-main);
+}
+
+.th-check,
+.td-check {
+    width: 44px;
+    text-align: center;
+}
+
+.th-check input[type="checkbox"],
+.td-check input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--danger);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.sort-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.sort-icon.muted {
+    opacity: 0.35;
+}
+
+.sort-icon.active-sort {
+    color: var(--primary);
+}
+
+/* Body rows */
+.marks-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.marks-table tr:last-child td {
+    border-bottom: none;
+}
+
+.marks-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.025);
+}
+
+/* Fail row highlight */
+.fail-row td {
+    background-color: rgba(239, 68, 68, 0.04) !important;
+    border-left: 3px solid var(--danger);
+}
+
+.fail-row:first-child td:first-child {
+    border-radius: 0;
+}
+
+/* Subject code chip */
+.subject-code {
+    font-family: 'Courier New', monospace;
+    background: #020617;
+    border: 1px solid var(--border-color);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #60a5fa;
+    letter-spacing: 0.5px;
+}
+
+.subject-name-cell {
+    max-width: 240px;
+}
+
+/* Credit pill */
+.credit-pill {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    color: #a5b4fc;
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Marks */
+.marks-highlight {
+    font-weight: 700;
+}
+
+.fail-marks {
+    color: var(--danger) !important;
+}
+
+.max-marks {
+    color: var(--text-muted);
+}
+
+/* Grade badge — uses CSS custom property --gc for dynamic color */
+.grade-badge {
+    display: inline-block;
+    min-width: 38px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: var(--gc, #94a3b8);
+    background-color: color-mix(in srgb, var(--gc, #94a3b8) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--gc, #94a3b8) 35%, transparent);
+    letter-spacing: 0.3px;
+}
+
+/* Status badges */
+.pass-status,
+.fail-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.pass-status {
+    color: var(--success);
+}
+
+.fail-status {
+    color: var(--danger);
+}
+
+/* Semester badge in arrears view */
+.sem-badge {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ── Summary Footer ───────────────────────────────────────────── */
+.table-summary {
+    background-color: #0a1020;
+    padding: 18px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.summary-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.summary-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.summary-denom {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* ── Re-exam Action Bar ───────────────────────────────────────── */
+.reexam-bar {
+    background: linear-gradient(135deg, #1a0a0a 0%, #2d0f0f 100%);
+    border-top: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.reexam-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.reexam-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.reexam-btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1.5px solid;
+}
+
+.reexam-btn.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Pay Fees button */
+.fee-btn {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.5);
+    color: #fbbf24;
+}
+
+.fee-btn:hover {
+    background: rgba(245, 158, 11, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+/* Apply Photocopy button */
+.apply-btn {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.5);
+    color: #4ade80;
+}
+
+.apply-btn:hover:not(:disabled) {
+    background: rgba(34, 197, 94, 0.22);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+/* ── Empty State ──────────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    background: #0b1220;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.empty-state h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: var(--text-main);
+}
+
+/* ── Loading Spinner ──────────────────────────────────────────── */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    color: var(--primary);
+    gap: 16px;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
