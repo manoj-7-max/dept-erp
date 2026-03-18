@@ -1,5 +1,4 @@
 "use client";
-import Home from '@/app/page_public_backup'; // Rename original home to something else if needed, or just recreate logic
 import Navbar from '@/components/Navbar';
 import { motion } from 'framer-motion';
 
