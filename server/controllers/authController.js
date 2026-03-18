@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
 
         console.log(`[Step 4] Searching for identifier: "${identifier}" using regex:`, searchRegex);
 
-        const user = await User.findOne({
+        let user = await User.findOne({
             $or: [
                 { email: searchRegex },
                 { registerNumber: searchRegex },
@@ -49,10 +49,25 @@ exports.login = async (req, res) => {
             ]
         });
 
+        let isStudentFallback = false;
+
         if (!user) {
-            console.warn(`[Step 4] User NOT FOUND in DB for identifier: ${identifier}`);
-            console.log("--- DEEP DEBUG LOGIN END ---\n");
-            return res.status(404).json({ error: 'User not found' });
+            // Check student model
+            user = await Student.findOne({
+                $or: [
+                    { email: searchRegex },
+                    { registerNumber: searchRegex },
+                    { regNo: searchRegex }
+                ]
+            });
+
+            if (!user) {
+                console.warn(`[Step 4] User NOT FOUND in DB for identifier: ${identifier}`);
+                console.log("--- DEEP DEBUG LOGIN END ---\n");
+                return res.status(404).json({ error: 'User not found' });
+            }
+            isStudentFallback = true;
+            user.role = 'student'; // Provide role
         }
 
         console.log(`[Step 4] User Found! ID: ${user._id}, Role: ${user.role}`);
@@ -61,7 +76,19 @@ exports.login = async (req, res) => {
         console.log(`[Step 7] Entered password: "${password}"`);
         console.log(`[Step 7] Stored password hash: "${user.password}"`);
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        let isMatch = false;
+        
+        if (isStudentFallback && (!user.password || !user.password.startsWith('$2'))) {
+            // Plain text check or unhashed password match from CSV? 
+            if (user.password) {
+                isMatch = await bcrypt.compare(password, user.password).catch(() => password === user.password);
+            } else {
+                // Default password for students if not set
+                isMatch = password === 'student123' || password === user.dateOfBirth?.toISOString().split('T')[0];
+            }
+        } else {
+            isMatch = await bcrypt.compare(password, user.password).catch(() => password === user.password);
+        }
         console.log(`[Step 7] Password Match Result: ${isMatch}`);
 
         if (!isMatch) {

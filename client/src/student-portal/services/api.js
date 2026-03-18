@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 1. Point to the Unified Backend on port 5000
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api', 
+    baseURL: 'https://dept-erp.onrender.com/api', 
 });
 
 // 2. Safely attach the authentication token
@@ -25,6 +25,31 @@ api.interceptors.request.use((req) => {
     }
     return req;
 });
+
+// 3. Global Response Error Handler & Retry Logic
+api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if (!originalRequest || !originalRequest.retryCount) {
+            originalRequest.retryCount = 0;
+        }
+
+        // Retry logic for network errors
+        if (!error.response && originalRequest.retryCount < 2) {
+            originalRequest.retryCount++;
+            return new Promise((resolve) => setTimeout(() => resolve(api(originalRequest)), 1000));
+        }
+
+        // Format user-friendly real error messages instead of "Server connection error"
+        let finalMessage = 'A network error occurred. Please check your connection.';
+        if (error.response) {
+            finalMessage = error.response.data?.error || error.response.data?.message || `Server returned ${error.response.status}`;
+        }
+        
+        return Promise.reject(new Error(finalMessage));
+    }
+);
 
 export const fetchDashboardSummary = () => api.get('/dashboard/summary');
 

@@ -21,7 +21,7 @@ export default function FacultyAnalyticsDetail() {
                 if (!token) return;
 
                 // Fetch the real faculty from DB
-                const res = await fetch(`http://localhost:5000/api/hod/faculty`, {
+                const res = await fetch(`https://dept-erp.onrender.com/api/hod/faculty`, {
                     headers: { 'x-auth-token': token }
                 });
 

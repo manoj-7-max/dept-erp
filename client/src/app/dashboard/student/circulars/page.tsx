@@ -16,7 +16,7 @@ export default function StudentCirculars() {
 
     useEffect(() => {
         if (token) {
-            fetch('http://localhost:5002/api/portal/circulars', {
+            fetch('https://dept-erp.onrender.com/api/portal/circulars', {
                 headers: { 'x-auth-token': token }
             })
                 .then(res => res.json())

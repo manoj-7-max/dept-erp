@@ -23,7 +23,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         if (!user || !token) return;
 
         // Connect to the backend URL from environment variables, falling back to localhost
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dept-erp.onrender.com';
         const socketInstance = io(backendUrl);
 
         socketInstance.on('connect', () => {

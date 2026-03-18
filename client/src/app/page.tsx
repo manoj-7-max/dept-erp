@@ -23,6 +23,20 @@ export default function SplitLoginPage() {
     if (role === 'student') { setEmail('student@college.edu'); setPassword('student123'); }
   };
 
+  // --- Global API Error Handler & Retry Mechanism ---
+  const fetchWithRetry = async (url: string, options: RequestInit, retries = 2, delay = 1000): Promise<Response> => {
+    for (let i = 0; i <= retries; i++) {
+      try {
+        return await fetch(url, options);
+      } catch (err) {
+        if (i === retries) throw err;
+        console.warn(`Fetch failed, retrying in ${delay}ms... (Attempt ${i + 1} of ${retries + 1})`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    throw new Error('Fetch failed after retries');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -41,7 +55,8 @@ export default function SplitLoginPage() {
 
     try {
       // Hitting the Unified Backend API
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dept-erp.onrender.com';
+      const res = await fetchWithRetry(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -70,7 +85,11 @@ export default function SplitLoginPage() {
       }
     } catch (err) {
       console.error(err);
-      setError('Server connection error');
+      if (err instanceof TypeError && err.message === 'Failed to fetch') {
+        setError('Network error: Cannot reach the server. If using a free tier, it may be waking up. Please wait and try again.');
+      } else {
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred during login.');
+      }
     }
   };
 

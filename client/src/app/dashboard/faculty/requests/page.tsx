@@ -18,7 +18,7 @@ export default function FacultyVerificationRequests() {
 
     useEffect(() => {
         if (token) {
-            fetch('http://localhost:5002/api/faculty/requests/pending', {
+            fetch('https://dept-erp.onrender.com/api/faculty/requests/pending', {
                 headers: { 'x-auth-token': token }
             })
                 .then(res => res.json())
@@ -29,7 +29,7 @@ export default function FacultyVerificationRequests() {
 
     const handleVerify = async (id: string, status: 'VERIFIED' | 'REJECTED') => {
         try {
-            const res = await fetch(`http://localhost:5002/api/faculty/request/${id}/verify`, {
+            const res = await fetch(`https://dept-erp.onrender.com/api/faculty/request/${id}/verify`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

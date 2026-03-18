@@ -32,7 +32,7 @@ export default function LoginPage() {
         // ------------------------------------------
 
         try {
-            const res = await fetch('http://localhost:5002/api/auth/login', {
+            const res = await fetch('https://dept-erp.onrender.com/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -41,10 +41,11 @@ export default function LoginPage() {
             if (res.ok) {
                 login(data.token, data.user);
             } else {
-                setError(data.msg || 'Login failed');
+                setError(data.error || data.msg || data.message || 'Login failed: Invalid credentials');
             }
-        } catch (err) {
-            setError('Server error');
+        } catch (err: any) {
+            console.error('Login error:', err);
+            setError(err.message || 'Server connection failed. Please ensure backend is running.');
         }
     };
 

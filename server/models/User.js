@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
     // Conditional specific fields
     registerNumber: { type: String, unique: true, sparse: true }, // For Students
     employeeId: { type: String, unique: true, sparse: true },     // For Faculty/HOD
+    section: { type: String }, // For Class Incharge / Faculty
 
     // Self-referencing link (e.g., Student pointing to Faculty)
     mentorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

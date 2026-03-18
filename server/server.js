@@ -16,8 +16,12 @@ const io = new Server(server, {
 });
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json({ limit: '50mb' })); // Increase payload limit for CSV uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Inject io into the request object so it can be accessed inside controllers
@@ -37,6 +41,16 @@ app.use('/api/concerns', require('./routes/concernRoutes'));
 app.use('/api/faculty', require('./routes/facultyRoutes'));
 app.use('/api/hod', require('./routes/hodRoutes'));
 app.use('/api/portal', require('./routes/portalRoutes'));
+app.use('/api/data', require('./routes/dataRoutes')); // CSV and Analytics data routes
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('❌ Global Server Error:', err.message);
+    res.status(err.status || 500).json({
+        error: true,
+        message: err.message || 'Internal Server Error'
+    });
+});
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/university_erp')
