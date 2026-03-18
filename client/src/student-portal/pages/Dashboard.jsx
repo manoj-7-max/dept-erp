@@ -15,8 +15,10 @@ const Dashboard = ({ children }) => {
 
     useEffect(() => {
         const userInfo = localStorage.getItem('userInfo');
-        if (!userInfo) {
-            router.push('/');
+        const unifiedUser = localStorage.getItem('user');
+        if (!userInfo && !unifiedUser) {
+            console.warn('[Dashboard] Authentication token not found in localStorage. Not redirecting to prevent loop.');
+            // router.push('/login');
         }
     }, [router]);
 

@@ -66,8 +66,13 @@ exports.login = async (req, res) => {
                 console.log("--- DEEP DEBUG LOGIN END ---\n");
                 return res.status(404).json({ error: 'User not found' });
             }
+            
+            // Convert to a plain JavaScript object so Mongoose strict mode doesn't swallow our fake attachments
+            user = user.toObject();
             isStudentFallback = true;
             user.role = 'student'; // Provide role
+        } else {
+            user = user.toObject();
         }
 
         console.log(`[Step 4] User Found! ID: ${user._id}, Role: ${user.role}`);

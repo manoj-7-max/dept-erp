@@ -17,10 +17,16 @@ const protect = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-        const user = await User.findById(decoded.id).select('-password');
+        let user = await User.findById(decoded.id).select('-password');
+        
+        // If not found in User, it means they are a pure Student from the CSV import
+        if (!user) {
+            const Student = require('../models/Student');
+            user = await Student.findById(decoded.id).select('-password');
+        }
 
         if (!user) {
-            return res.status(401).json({ message: 'Not authorized, user not found' });
+            return res.status(401).json({ message: 'Not authorized, user not found in any collection' });
         }
 
         req.user = user;

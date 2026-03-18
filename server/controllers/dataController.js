@@ -20,7 +20,10 @@ exports.importCsv = async (req, res) => {
 
         const results = [];
         fs.createReadStream(req.file.path)
-            .pipe(csv())
+            .pipe(csv({
+                skipLines: 11, // Skips the university header metadata
+                mapHeaders: ({ header }) => header.trim().replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,"")
+            }))
             .on('data', (data) => results.push(data))
             .on('end', async () => {
                 try {
@@ -28,23 +31,54 @@ exports.importCsv = async (req, res) => {
                     let attendanceBulkOps = [];
 
                     for (const row of results) {
-                        const regNo = (row['Register Number'] || row['regNo'] || row['RegisterNumber'] || '').trim();
-                        const name = (row['Student Name'] || row['name'] || row['StudentName'] || '').trim();
-                        const dateRaw = row['Date'] || row['date'] || new Date();
-                        const subject = (row['Subject'] || row['subject'] || '').trim();
-                        const status = (row['Status'] || row['status'] || 'Present').trim();
+                        // Create a lowercase key map for robust access
+                        const lcRow = {};
+                        for (const key in row) {
+                            lcRow[key.toLowerCase()] = row[key];
+                        }
+
+                        // Robust RegNo Extraction
+                        let regNoRaw = null;
+                        for (const key of Object.keys(lcRow)) {
+                            if (key.includes('register') || key.includes('reg') || key === 'id') {
+                                regNoRaw = lcRow[key];
+                                break;
+                            }
+                        }
+                        
+                        // Robust Name Extraction
+                        let nameRaw = null;
+                        for (const key of Object.keys(lcRow)) {
+                            if (key.includes('name') || key.includes('student')) {
+                                nameRaw = lcRow[key];
+                                break;
+                            }
+                        }
+
+                        const regNo = (regNoRaw || '').trim();
+                        const name = (nameRaw || '').trim();
+                        const dateRaw = lcRow['date'] || new Date();
+                        const subject = (lcRow['subject'] || lcRow['course'] || '').trim();
+                        const statusRaw = lcRow['status'] || lcRow['attendance logs'] || lcRow['attendance'] || 'Present';
+                        const status = String(statusRaw).trim();
                         
                         const year = 3; 
                         const dept = 'CSE';
 
-                        if (!regNo) continue;
+                        if (!regNo) {
+                            // Skip strictly blank rows
+                            continue;
+                        }
 
                         studentBulkOps.push({
                             updateOne: {
                                 filter: { regNo },
                                 update: {
                                     $set: { name, section: sectionMapping, dept, year },
-                                    $setOnInsert: { registerNumber: regNo }
+                                    $setOnInsert: { 
+                                        registerNumber: regNo,
+                                        email: `${regNo}@student.college.edu` 
+                                    }
                                 },
                                 upsert: true
                             }

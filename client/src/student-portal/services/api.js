@@ -55,7 +55,7 @@ export const fetchDashboardSummary = () => api.get('/dashboard/summary');
 
 export const login = async (registerNumber, password) => {
     const response = await api.post('/auth/login', {
-        registerNumber,
+        email: registerNumber, // Mapped accurately to the unified API expectation
         password,
     });
     if (response.data) {
