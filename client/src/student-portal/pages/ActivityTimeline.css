@@ -1,0 +1,211 @@
+/* Container */
+.timeline-container {
+    background: #0b1220;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.timeline-header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Vertical Timeline Structure */
+.timeline-list {
+    position: relative;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Connecting Line */
+.timeline-list::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 20px; /* Align with padding-left */
+    width: 2px;
+    background: rgba(99, 102, 241, 0.2);
+    z-index: 1;
+}
+
+/* Timeline Event Item */
+.timeline-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding-left: 40px; /* Space for marker */
+    z-index: 2;
+    transition: transform 0.2s;
+}
+
+.timeline-item:hover {
+    transform: translateX(4px);
+}
+
+/* Circular Marker with Icon */
+.timeline-marker {
+    position: absolute;
+    left: -14px; /* Center over the 2px line at left 20px (20 - 14/2 = 13... Wait: left: 20px. Marker is absolute relative to item. Item padding left is 40px. The line is absolute to timeline-list. */
+}
+
+.timeline-item .timeline-marker {
+    position: absolute;
+    left: -20px; /* So it aligns exactly over the timeline line (which is absolute left: 20px in .timeline-list relative to timeline-list, wait! */
+}
+
+/* Re-calculate Marker Alignment */
+.timeline-list {
+    padding-left: 24px; 
+}
+.timeline-list::before {
+    left: 24px;
+}
+.timeline-item {
+    padding-left: 32px;
+}
+.timeline-item .timeline-marker {
+    left: -16px; /* 32 - 16 centers it over the 0 line? No. */
+}
+
+/* Better Layout */
+.timeline-list {
+    position: relative;
+    margin-left: 12px;
+}
+.timeline-list::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.timeline-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-left: 36px;
+    margin-bottom: 24px;
+    transition: transform 0.2s;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -15px; /* Centers the 32px marker on the 2px line (0) */
+    top: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 0 0 4px #0b1220, 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+/* Event Card layout */
+.timeline-card {
+    background: #020617;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    width: 100%;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.timeline-item:hover .timeline-card {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Flex row for top header of card */
+.tl-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Category Badge inside card (or near icon) */
+.tl-category {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.tl-date {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.tl-title {
+    margin: 4px 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.tl-desc {
+    font-size: 14px;
+    color: #cbd5e1;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Colors for specific event categories */
+/* Academic → Blue */
+.tl-type-academic .timeline-marker { background: #3b82f6; }
+.tl-type-academic .tl-category { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+
+/* Mentor Meeting → Green */
+.tl-type-mentormeeting .timeline-marker { background: #10b981; }
+.tl-type-mentormeeting .tl-category { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+
+/* Document → Orange */
+.tl-type-document .timeline-marker { background: #f59e0b; }
+.tl-type-document .tl-category { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+/* Competition → Purple */
+.tl-type-competition .timeline-marker { background: #a855f7; }
+.tl-type-competition .tl-category { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+/* Health / Personal → Red */
+.tl-type-healthpersonal .timeline-marker { background: #ef4444; }
+.tl-type-healthpersonal .tl-category { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+/* Default fallback colors */
+.tl-type-default .timeline-marker { background: #64748b; }
+.tl-type-default .tl-category { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
