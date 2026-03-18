@@ -1,0 +1,16 @@
+{
+  "name": "hod-automation-workspace",
+  "version": "1.0.0",
+  "description": "Department Automation System - Workspace",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "dev": "concurrently \"npm run dev-api\" \"npm run dev-client\"",
+    "dev-api": "cd server && npm run dev",
+    "dev-client": "cd client && npm run dev",
+    "seed": "cd server && npm run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
