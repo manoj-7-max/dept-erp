@@ -5,11 +5,11 @@ const User = require('../models/User');
 
 exports.getStudents = async (req, res) => {
     try {
-        const students = [
-            { _id: 'mock-s1', name: 'Jane Student', email: 'student@college.edu', rollNumber: 'CSE2024001', batch: '2024-2028' },
-            { _id: 'mock-s2', name: 'John Smith', email: 'john@college.edu', rollNumber: 'CSE2024002', batch: '2024-2028' }
-        ];
-
+        const { section } = req.query;
+        let query = {};
+        if (section) query.section = section;
+        
+        const students = await User.find({ role: 'student', ...query }).select('-password');
         res.json(students);
     } catch (err) {
         console.error(err.message);
@@ -31,6 +31,27 @@ exports.markAttendance = async (req, res) => {
 
         await Attendance.insertMany(attendanceRecords);
         res.json({ msg: 'Attendance marked successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.saveInternalMarks = async (req, res) => {
+    try {
+        const { subject, examType, marksData } = req.body; // marksData: [{ studentId, marks, totalMarks }]
+
+        const marksRecords = marksData.map(m => ({
+            studentId: m.studentId,
+            subject,
+            examType,
+            marks: m.marks,
+            totalMarks: m.totalMarks || 100,
+            facultyId: req.user.id
+        }));
+
+        await InternalMark.insertMany(marksRecords);
+        res.json({ msg: 'Marks saved successfully' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -64,6 +85,70 @@ exports.getPendingVerifications = async (req, res) => {
         // Faculty sees Pending requests from Students
         const studentRequests = await Request.find({ status: 'Pending' }).populate('studentId', 'name role department');
         res.json(studentRequests);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.getMentees = async (req, res) => {
+    try {
+        const mentees = await User.find({ role: 'student', mentorId: req.user.id }).select('-password');
+        res.json(mentees);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.getFacultyStats = async (req, res) => {
+    try {
+        const menteesCount = await User.countDocuments({ role: 'student', mentorId: req.user.id });
+        const pendingRequests = await Request.countDocuments({ status: 'Pending' });
+        
+        // Mocking some stats for now as some models like LessonPlan might not exist yet
+        res.json({
+            menteesCount,
+            subjectCount: 4, // Placeholder
+            lessonPlanCompletion: '75%',
+            pendingRequests,
+            researchPapers: 3
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.scheduleMeeting = async (req, res) => {
+    try {
+        const { studentId, meetingDate, meetingTime, meetingMode, description } = req.body;
+        const MentoringMeeting = require('../models/MentoringMeeting');
+
+        const meeting = new MentoringMeeting({
+            studentId,
+            mentorId: req.user.id,
+            meetingDate,
+            meetingTime,
+            meetingMode,
+            description,
+            status: 'Scheduled'
+        });
+
+        await meeting.save();
+
+        // Emit real-time notification to student
+        const io = req.app.get('io');
+        if (io) {
+            io.to(studentId.toString()).emit('notification', {
+                type: 'MENTORING_MEETING',
+                title: 'New Mentoring Meeting Scheduled',
+                message: `Your mentor has scheduled a meeting on ${new Date(meetingDate).toLocaleDateString()} at ${meetingTime}.`,
+                date: new Date().toISOString()
+            });
+        }
+
+        res.json(meeting);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');

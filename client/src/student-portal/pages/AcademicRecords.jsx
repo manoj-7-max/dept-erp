@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
     BookOpen, Calendar, FileText, CheckCircle,
@@ -9,7 +9,8 @@ import {
 import './AcademicRecords.css';
 import SubjectGradeBarChart from './SubjectGradeBarChart';
 import MarksBarChart from './MarksBarChart';
-import { getGradeInfo, MOCK_RECORDS } from '../services/academicMockData';
+import { fetchAcademicRecords } from '../services/api';
+import { getGradeInfo } from '../services/academicMockData';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Grade colour map (local — display only, not needed in shared module)
@@ -31,13 +32,31 @@ const gradeColorMap = {
 const AcademicRecords = () => {
 
     // ── core state ─────────────────────────────────────────────────────────
-    const [records] = useState(MOCK_RECORDS);
-    const [loading] = useState(false);
+    const [records, setRecords] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const searchParams = useSearchParams();
     const [showArrearsOnly, setShowArrearsOnly] = useState(searchParams.get('filterBacklogs') === 'true');
     const [selectedSemester, setSelectedSemester] = useState(1);
     const [selectedAssessment, setSelectedAssessment] = useState('Semester Marks');
     const [switchingTab, setSwitchingTab] = useState(false);
+
+    useEffect(() => {
+        const loadRecords = async () => {
+            try {
+                setLoading(true);
+                const res = await fetchAcademicRecords();
+                setRecords(res.data || []);
+                setError(null);
+            } catch (err) {
+                console.error('Error fetching academic records:', err);
+                setError('Failed to load marks. Please check your connection.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadRecords();
+    }, []);
 
     // ── sort state ─────────────────────────────────────────────────────────
     // key: 'subjectName' | 'marksScored' | 'grade' | 'credits' | null

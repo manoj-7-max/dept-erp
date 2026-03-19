@@ -5,6 +5,7 @@ const protect = require('../middlewares/authMiddleware');
 
 router.use(protect); // Ensure user is authenticated
 
+router.get('/search', chatController.searchUsers);
 router.get('/:userId', chatController.getMessages);
 router.post('/send', chatController.sendMessage);
 

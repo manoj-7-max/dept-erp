@@ -11,7 +11,11 @@ const Activity = require('../models/Activity');
 // Get Attendance
 exports.getAttendance = async (req, res) => {
     try {
-        const attendance = await Attendance.find({ studentId: req.student.id });
+        const studentId = req.student._id;
+        const regNo = req.student.registerNumber;
+        const attendance = await Attendance.find({
+            $or: [{ studentId }, { regNo }]
+        });
         res.json(attendance);
     } catch (err) {
         console.error(err.message);
@@ -22,7 +26,11 @@ exports.getAttendance = async (req, res) => {
 // Get Mentoring Meetings
 exports.getMeetings = async (req, res) => {
     try {
-        const meetings = await MentoringMeeting.find({ studentId: req.student.id }).sort({ meetingDate: -1 });
+        const studentId = req.student._id;
+        const regNo = req.student.registerNumber;
+        const meetings = await MentoringMeeting.find({
+            $or: [{ studentId }, { regNo }]
+        }).sort({ meetingDate: -1 });
         res.json(meetings);
     } catch (err) {
         console.error(err.message);
@@ -169,10 +177,14 @@ exports.getTimeline = async (req, res) => {
 // Get Dashboard Summary / KPIs
 exports.getDashboardSummary = async (req, res) => {
     try {
-        const studentId = req.student.id;
+        const studentId = req.student._id;
+        const regNo = req.student.registerNumber;
 
         // 1. Calculate Attendance %
-        const attendanceRecords = await Attendance.find({ studentId });
+        const attendanceRecords = await Attendance.find({ 
+            $or: [{ studentId }, { regNo }] 
+        });
+        
         let totalClasses = 0;
         let classesAttended = 0;
         attendanceRecords.forEach(record => {
@@ -181,26 +193,20 @@ exports.getDashboardSummary = async (req, res) => {
         });
         const attendancePercentage = totalClasses > 0 ? ((classesAttended / totalClasses) * 100).toFixed(1) : 0;
 
-        // 2. Mock CGPA & Backlogs logic based on academic records
-        // Normally this would be a complex calculation, keeping it simplified for summary purposes
-        const academicRecords = await AcademicRecord.find({ studentId, assessmentType: 'Semester Exam' });
-        let cgpa = 8.5; // Default mock value if no records
+        // 2. CGPA & Backlogs logic
+        const academicRecords = await InternalMark.find({ studentId });
+        let cgpa = 8.5; // Default placeholder for CGPA calculation
         let backlogs = 0;
 
-        // Simulate checking for backlogs (< 50% marks in sem exams)
-        academicRecords.forEach(record => {
-            record.subjects.forEach(sub => {
-                if (sub.marksScored < (sub.maximumMarks * 0.5)) {
-                    backlogs++;
-                }
-            });
+        // 3. Co-curricular Count
+        const activitiesCount = await Activity.countDocuments({ 
+            $or: [{ studentId }, { regNo }] 
         });
 
-        // 3. Co-curricular Count
-        const activitiesCount = await Activity.countDocuments({ studentId });
-
         // 4. Total Mentor Meetings
-        const meetingsCount = await MentoringMeeting.countDocuments({ studentId });
+        const meetingsCount = await MentoringMeeting.countDocuments({ 
+            $or: [{ studentId }, { regNo }] 
+        });
 
         res.json({
             cgpa,

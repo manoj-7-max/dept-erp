@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useSocket } from '@/context/SocketProvider';
 import Link from 'next/link';
 import {
     Users, GraduationCap, BookOpen, Clock, AlertTriangle, MessageSquare,
@@ -11,8 +12,10 @@ import AnimatedPage from '@/components/AnimatedPage';
 
 export default function HodDashboard() {
     const { user, token } = useAuth();
+    const { socket } = useSocket() || {};
     // Using mock data for realistic ERP visualization since backend might not have all endpoints yet
     const [stats, setStats] = useState({ studentCount: 1240, facultyCount: 48, pendingRequests: 12 });
+    const [liveFeed, setLiveFeed] = useState<{text: string, link: string}[]>([]);
 
     const studentsAbove75 = 1100;
     const studentsBetween65And75 = 220;
@@ -89,8 +92,8 @@ export default function HodDashboard() {
         { label: 'Total Students', value: 1240, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', link: '/dashboard/hod/students', trend: '+12%', trendUp: true },
         { label: 'Total Faculty', value: 48, icon: GraduationCap, color: 'text-purple-600', bg: 'bg-purple-50', link: '/dashboard/hod/faculty', trend: '+2', trendUp: true },
         { label: 'Subjects Running', value: 36, icon: BookOpen, color: 'text-indigo-600', bg: 'bg-indigo-50', link: '/dashboard/hod/academics', trend: 'Same', trendUp: null },
-        { label: 'Classes Today', value: 24, icon: Clock, color: 'text-cyan-600', bg: 'bg-cyan-50', link: '/dashboard/hod/classes', trend: '-2', trendUp: false },
-        { label: 'Pending Requests', value: 12, icon: AlertTriangle, color: 'text-orange-600', bg: 'bg-orange-50', link: '/dashboard/hod/requests', trend: '+4', trendUp: false },
+        { label: 'Classes Today', value: 24, icon: Clock, color: 'text-cyan-600', bg: 'bg-cyan-50', link: '/dashboard/hod/reports/attendance', trend: '-2', trendUp: false },
+        { label: 'Pending Requests', value: 12, icon: AlertTriangle, color: 'text-orange-600', bg: 'bg-orange-50', link: '/dashboard/hod/faculty-requests', trend: '+4', trendUp: false },
         { label: 'Active Complaints', value: 3, icon: MessageSquare, color: 'text-red-600', bg: 'bg-red-50', link: '/dashboard/hod/complaints', trend: '-1', trendUp: true },
     ];
 
@@ -114,9 +117,9 @@ export default function HodDashboard() {
     ];
 
     const pendingApprovals = [
-        { id: 'req1', type: 'Leave Request', by: 'Prof. Karthik', date: '05 Mar 2026', status: 'Pending', link: '/dashboard/hod/requests/leave' },
-        { id: 'req2', type: 'OD Request', by: 'Dr. Subramani', date: '04 Mar 2026', status: 'Pending', link: '/dashboard/hod/requests/od' },
-        { id: 'req3', type: 'Lesson Plan', by: 'Prof. Anitha', date: '03 Mar 2026', status: 'Pending', link: '/dashboard/hod/requests/lesson-plan' },
+        { id: 'req1', type: 'Leave Request', by: 'Prof. Karthik', date: '05 Mar 2026', status: 'Pending', link: '/dashboard/hod/faculty-requests' },
+        { id: 'req2', type: 'OD Request', by: 'Dr. Subramani', date: '04 Mar 2026', status: 'Pending', link: '/dashboard/hod/faculty-requests' },
+        { id: 'req3', type: 'Lesson Plan', by: 'Prof. Anitha', date: '03 Mar 2026', status: 'Pending', link: '/dashboard/hod/academics' },
     ];
 
     const facultyPerformance = [
@@ -125,12 +128,32 @@ export default function HodDashboard() {
         { id: 'fac3', name: 'Dr. Ramesh', subjects: 2, progress: 65, publications: 1 },
     ];
 
-    const recentHistry = [
-        { text: 'Attendance submitted for 2nd Year A (Data Structures)', link: '/dashboard/hod/reports/attendance' },
-        { text: 'Lesson plan uploaded by Prof. Karthik', link: '/dashboard/hod/requests/lesson-plan' },
-        { text: 'Complaint submitted by Staff ID: ST004', link: '/dashboard/hod/complaints' },
-        { text: 'Leave request approved for Dr. Priya', link: '/dashboard/hod/requests/leave' },
-    ];
+    useEffect(() => {
+        // Initial static history block
+        setLiveFeed([
+            { text: 'Attendance submitted for 2nd Year A (Data Structures)', link: '/dashboard/hod/reports/attendance' },
+            { text: 'Lesson plan uploaded by Prof. Karthik', link: '/dashboard/hod/academics' },
+            { text: 'Complaint submitted by Staff ID: ST004', link: '/dashboard/hod/complaints/staff' },
+            { text: 'Leave request approved for Dr. Priya', link: '/dashboard/hod/faculty-requests' },
+        ]);
+
+        if (!socket) return;
+
+        // Two-way synchronization event bindings
+        const handleNewCircular = (data: any) => setLiveFeed(prev => [{ text: `New circular posted: ${data.title}`, link: '/dashboard/hod/circulars' }, ...prev]);
+        const handleRequestUpdated = (data: any) => setLiveFeed(prev => [{ text: `Request ${data.status.replace('_', ' ').toLowerCase()}`, link: '/dashboard/hod/requests' }, ...prev]);
+        const handleNewMessage = () => setLiveFeed(prev => [{ text: `New message received`, link: '/dashboard/messages' }, ...prev]);
+
+        socket.on('new_circular', handleNewCircular);
+        socket.on('request_updated', handleRequestUpdated);
+        socket.on('new_message', handleNewMessage);
+
+        return () => {
+            socket.off('new_circular', handleNewCircular);
+            socket.off('request_updated', handleRequestUpdated);
+            socket.off('new_message', handleNewMessage);
+        };
+    }, [socket]);
 
     return (
         <AnimatedPage>
@@ -579,7 +602,7 @@ export default function HodDashboard() {
                             </h3>
                         </div>
                         <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-200 before:to-transparent">
-                            {recentHistry.map((item, i) => (
+                            {liveFeed.slice(0, 5).map((item, i) => (
                                 <Link href={item.link} key={i}>
                                     <div className="relative flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 transition cursor-pointer group">
                                         <div className="w-4 h-4 rounded-full bg-blue-100 border-2 border-white shadow-sm mt-0.5 z-10 shrink-0 group-hover:bg-blue-400 transition-colors"></div>

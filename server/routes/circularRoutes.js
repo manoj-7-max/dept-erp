@@ -23,6 +23,17 @@ router.post('/', async (req, res) => {
         });
 
         const circular = await newCircular.save();
+
+        // Real-time synchronization across dashboards
+        if (req.io) {
+            req.io.emit('new_circular', circular); // Update dashboards globally
+            req.io.emit('notification', {          // Cascade generic notifications
+                title: 'New Circular Posted',
+                message: `${title} (${category})`,
+                type: 'System'
+            });
+        }
+
         res.json(circular);
     } catch (err) {
         console.error(err.message);

@@ -18,5 +18,5 @@ export const chatService = {
     getMessages: (conversationId: string) => api.get(`/chat/messages/${conversationId}`),
     sendMessage: (data: { recipientId?: string; content: string; conversationId?: string }) => 
         api.post('/chat/messages', data),
-    searchUsers: (query: string) => api.get(`/chat/users/search?query=${query}`),
+    searchUsers: (query: string) => api.get(`/chat/search?query=${query}`),
 };

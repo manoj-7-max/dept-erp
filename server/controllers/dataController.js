@@ -92,10 +92,13 @@ exports.importCsv = async (req, res) => {
                         }
 
                         if (subject || row['Date'] || row['date']) {
+                            // Find student to link ID
+                            const student = await Student.findOne({ registerNumber: regNo });
+                            
                             attendanceBulkOps.push({
                                 insertOne: {
                                     document: {
-                                        studentId: null, // Will update via aggregate manually later if needed
+                                        studentId: student ? student._id : null, 
                                         regNo,
                                         date: new Date(dateRaw),
                                         subject: subject || 'General',

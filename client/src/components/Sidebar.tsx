@@ -23,7 +23,7 @@ export default function Sidebar() {
         { name: 'Research Papers', href: '/dashboard/faculty/research-papers', icon: BookCopy },
         { name: 'Mentor', href: '/dashboard/faculty/mentor', icon: HeartHandshake },
         { name: 'Circulars', href: '/dashboard/faculty/circulars', icon: Bell },
-        { name: 'Complaint', href: '/dashboard/faculty/complaint', icon: MessageSquare },
+        { name: 'Complaints', href: '/dashboard/faculty/complaints', icon: MessageSquare },
         { name: 'Reports', href: '/dashboard/faculty/reports', icon: BarChart },
         { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
     ];
@@ -43,7 +43,7 @@ export default function Sidebar() {
     const links = {
         hod: [
             { name: 'Dashboard', href: '/dashboard/hod', icon: LayoutDashboard },
-            { name: 'Academics', href: '/dashboard/academics', icon: BookOpen },
+            { name: 'Academics', href: '/dashboard/hod/academics', icon: BookOpen },
             { name: 'Requests', href: '/dashboard/hod/requests', icon: FileText },
             { name: 'Circulars', href: '/dashboard/hod/circulars', icon: Bell },
             { name: 'Faculty', href: '/dashboard/hod/faculty', icon: Users },
@@ -59,13 +59,13 @@ export default function Sidebar() {
         faculty: facultyLinks,
         class_incharge: selectedRole === 'incharge' ? inchargeLinks : facultyLinks,
         student: [
-            { name: 'Dashboard', href: '/dashboard/student', icon: LayoutDashboard },
-            { name: 'Academics', href: '/dashboard/academics', icon: BookOpen },
-            { name: 'Notices', href: '/dashboard/student/circulars', icon: Bell },
-            { name: 'My Attendance', href: '/dashboard/student/attendance', icon: CalendarCheck },
-            { name: 'Apply Leave/OD', href: '/dashboard/student/apply', icon: FileText },
-            { name: 'Complaints', href: '/dashboard/complaints', icon: MessageSquare },
-            { name: 'Results', href: '/dashboard/student/results', icon: BarChart },
+            { name: 'Profile', href: '/student/dashboard/profile', icon: User },
+            { name: 'Academic Records', href: '/student/dashboard/academic-records', icon: BookOpen },
+            { name: 'Attendance', href: '/student/dashboard/attendance', icon: CalendarCheck },
+            { name: 'Circulars', href: '/student/dashboard/circular', icon: Bell },
+            { name: 'Concerns', href: '/student/dashboard/concerns', icon: MessageSquare },
+            { name: 'Documents', href: '/student/dashboard/documents', icon: FileText },
+            { name: 'Mentor', href: '/student/dashboard/mentor', icon: HeartHandshake },
             { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
         ]
     };

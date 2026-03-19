@@ -5,6 +5,7 @@ import './CardStyles.css';
 const StudentGoals = () => {
     const [goals, setGoals] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     const [interest, setInterest] = useState('');
     const [skills, setSkills] = useState('');
@@ -21,6 +22,7 @@ const StudentGoals = () => {
             setGoals(response.data);
         } catch (error) {
             console.error("Error fetching goals:", error);
+            setError('Failed to load goals.');
         } finally {
             setLoading(false);
         }
@@ -49,6 +51,7 @@ const StudentGoals = () => {
     };
 
     if (loading) return <div>Loading goals...</div>;
+    if (error) return <div style={{ color: '#ef4444', padding: '20px', fontWeight: '500' }}>{error}</div>;
 
     return (
         <div className="page-container">

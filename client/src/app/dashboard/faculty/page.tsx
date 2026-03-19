@@ -8,26 +8,35 @@ import {
 } from 'lucide-react';
 import AnimatedPage from '@/components/AnimatedPage';
 
+import { fetchFacultyStats } from '@/services/api';
+
 export default function FacultyDashboard() {
     const { token, user, setSelectedRole } = useAuth();
+    const [stats, setStats] = useState<any>(null);
 
     useEffect(() => {
         if (user?.role === 'class_incharge') {
             setSelectedRole('faculty');
         }
+        loadStats();
     }, [user, setSelectedRole]);
 
-    // --- Mock Data for ERP UI ---
+    const loadStats = async () => {
+        try {
+            const res = await fetchFacultyStats();
+            setStats(res.data);
+        } catch (err) {
+            console.error('Error loading stats:', err);
+        }
+    };
 
-    // 1. Top Summary Cards
+    // 1. Top Summary Cards (Dynamic)
     const summaryCards = [
-        { label: 'Subjects Handling', value: 4, icon: BookOpen, color: 'text-blue-600', bg: 'bg-blue-50' },
-        { label: 'Lesson Plan Completion', value: '75%', icon: CheckSquare, color: 'text-green-600', bg: 'bg-green-50' },
-        { label: 'Notes Uploaded', value: 12, icon: FileText, color: 'text-purple-600', bg: 'bg-purple-50' },
-        { label: 'Logbook Entries', value: 45, icon: CalendarCheck, color: 'text-teal-600', bg: 'bg-teal-50' },
-        { label: 'Internal Test Status', value: 'Pending', icon: AlertCircle, color: 'text-orange-600', bg: 'bg-orange-50' },
-        { label: 'Research Papers', value: 3, icon: BookCopy, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-        { label: 'Pending Submissions', value: 2, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
+        { label: 'Subjects Handling', value: stats?.subjectCount || 4, icon: BookOpen, color: 'text-blue-600', bg: 'bg-blue-50' },
+        { label: 'Lesson Plan Completion', value: stats?.lessonPlanCompletion || '75%', icon: CheckSquare, color: 'text-green-600', bg: 'bg-green-50' },
+        { label: 'Mentees Assigned', value: stats?.menteesCount || 0, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
+        { label: 'Pending Verifications', value: stats?.pendingRequests || 0, icon: AlertCircle, color: 'text-orange-600', bg: 'bg-orange-50' },
+        { label: 'Research Papers', value: stats?.researchPapers || 0, icon: BookCopy, color: 'text-indigo-600', bg: 'bg-indigo-50' },
     ];
 
     // 2. Today's Schedule 

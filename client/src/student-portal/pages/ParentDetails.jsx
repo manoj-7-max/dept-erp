@@ -24,8 +24,8 @@ const ParentDetails = () => {
     };
 
     if (loading) return <div className="loading">Loading details...</div>;
-    if (!details) return <div className="alert-info">Parent details not configured.</div>;
     if (error) return <div className="error">{error}</div>;
+    if (!details) return <div className="alert-info">Parent details not configured.</div>;
 
     return (
         <div className="page-container">

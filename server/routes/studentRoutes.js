@@ -50,6 +50,12 @@ router.get('/academic-records', protect, getAcademicRecords);
 router.get('/parent-details', protect, getParentDetails);
 router.get('/activities', protect, getActivities);
 router.get('/behaviour', protect, getBehaviour);
+router.get('/internal-marks', protect, getInternalMarks);
+
+// Mount Sub-Routers to unify siloed APIs
+router.use('/dashboard', require('./dashboardRoutes'));
+router.use('/concerns', require('./concernRoutes'));
+
 router.route('/mentoring-reports')
     .get(protect, getMentoringReports)
     .post(protect, upload.single('attachmentFile'), createMentoringReport);

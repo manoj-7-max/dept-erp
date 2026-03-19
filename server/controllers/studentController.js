@@ -8,6 +8,7 @@ const MentoringReport = require('../models/MentoringReport');
 const MentoringMeeting = require('../models/MentoringMeeting');
 const MentoringTask = require('../models/MentoringTask');
 const MentorNote = require('../models/MentorNote');
+const InternalMark = require('../models/InternalMark');
 
 // @desc    Get student profile
 // @route   GET /api/student/profile
@@ -107,6 +108,18 @@ const getBehaviour = async (req, res) => {
     try {
         const behaviour = await Behaviour.findOne({ studentId: req.student._id });
         res.json(behaviour);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+// @desc    Get internal marks (Daily Test, CIA, etc)
+// @route   GET /api/student/internal-marks
+// @access  Private
+const getInternalMarks = async (req, res) => {
+    try {
+        const marks = await InternalMark.find({ studentId: req.student._id }).sort({ createdAt: -1 });
+        res.json(marks);
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
@@ -294,5 +307,6 @@ module.exports = {
     addMentorNote,
     getMentoringTasks,
     addMentoringTask,
-    updateTaskStatus
+    updateTaskStatus,
+    getInternalMarks
 };

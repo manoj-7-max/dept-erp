@@ -1,7 +1,7 @@
 .dashboard-layout {
     display: flex;
     min-height: 100vh;
-    background-color: var(--bg-color);
+    background-color: var(--bg-dark);
 }
 
 .main-content {
@@ -10,21 +10,13 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    transition: margin-left 0.3s ease;
+    transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .content-area {
-    padding: 30px;
+    padding: 40px;
     flex: 1;
     overflow-y: auto;
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-}
-
-.content-area::-webkit-scrollbar {
-    display: none;
 }
 
 /* ── Global Attendance Warning Banner ────────────────────────── */
@@ -32,27 +24,28 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 20px;
-    gap: 8px;
-    margin: 10px 20px 0;
-    border-radius: 10px;
-    animation: gabSlideDown 0.4s ease;
+    padding: 12px 24px;
+    gap: 16px;
+    margin: 20px 40px 0;
+    border-radius: 16px;
+    animation: gabSlideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(8px);
 }
 
 .global-attendance-banner.warning {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.10) 0%, rgba(245, 158, 11, 0.04) 100%);
-    border: 1.5px solid rgba(245, 158, 11, 0.25);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .global-attendance-banner.danger {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.10) 0%, rgba(239, 68, 68, 0.04) 100%);
-    border: 1.5px solid rgba(239, 68, 68, 0.25);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .gab-content {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex: 1;
 }
 
@@ -60,60 +53,49 @@
     flex-shrink: 0;
 }
 
-.global-attendance-banner.warning .gab-icon {
-    color: #f59e0b;
-}
-
-.global-attendance-banner.danger .gab-icon {
-    color: #ef4444;
-}
-
 .gab-text {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .gab-text strong {
-    font-size: 12px;
-    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 800;
 }
 
 .global-attendance-banner.warning .gab-text strong {
-    color: #fbbf24;
+    color: #f59e0b;
 }
 
 .global-attendance-banner.danger .gab-text strong {
-    color: #f87171;
+    color: #ef4444;
 }
 
 .gab-text span {
-    font-size: 12px;
-    color: var(--text-muted);
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .gab-dismiss {
-    background: none;
-    border: none;
-    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
     cursor: pointer;
-    padding: 3px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
+    padding: 6px;
+    border-radius: 10px;
+    transition: var(--transition);
 }
 
 .gab-dismiss:hover {
-    color: var(--text-main);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
 }
 
 @keyframes gabSlideDown {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-20px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -124,22 +106,22 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     z-index: 95;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .main-content {
         margin-left: 0;
     }
 
     .content-area {
-        padding: 20px 15px;
+        padding: 24px;
     }
 
-    .sidebar-container.open .sidebar {
-        transform: translateX(0);
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    .global-attendance-banner {
+        margin: 16px 20px 0;
     }
 
     .sidebar-overlay {

@@ -37,3 +37,35 @@ exports.sendMessage = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// 3. Search Users for Directory
+exports.searchUsers = async (req, res) => {
+    try {
+        const { query } = req.query;
+        const currentUserId = req.user._id || req.user.id;
+        const currentUserRole = req.user.role;
+
+        if (!query || query.length < 2) {
+            return res.json([]);
+        }
+
+        const searchCriteria = {
+            _id: { $ne: currentUserId },
+            $or: [
+                { name: { $regex: query, $options: 'i' } },
+                { registerNumber: { $regex: query, $options: 'i' } },
+                { employeeId: { $regex: query, $options: 'i' } }
+            ]
+        };
+
+        // Students search for faculty/HOD, Faculty search for students/faculty/HOD
+        // (Removing strict filtering for now to allow discovery, but can be refined)
+        const users = await User.find(searchCriteria)
+            .limit(10)
+            .select('name role department registerNumber employeeId');
+
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
