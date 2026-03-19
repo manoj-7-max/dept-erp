@@ -56,7 +56,7 @@ const getMentor = async (req, res) => {
     try {
         const student = await Student.findById(req.student._id).populate('mentorId');
         if (!student.mentorId) {
-            return res.status(404).json({ message: 'Mentor not assigned' });
+            return res.json(null);
         }
         res.json(student.mentorId);
     } catch (err) {

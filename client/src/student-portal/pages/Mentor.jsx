@@ -42,6 +42,7 @@ const Mentor = () => {
     const loadData = async () => {
         try {
             setLoading(true);
+            setError('');
             const [mentorRes, reportsRes, tasksRes] = await Promise.all([
                 fetchMentor(),
                 fetchMentoringReports(filters),
@@ -50,8 +51,14 @@ const Mentor = () => {
             setMentor(mentorRes.data);
             setReports(reportsRes.data);
             setTasks(tasksRes.data);
+
+            if (!mentorRes.data) {
+                // Not necessarily an error, just no mentor assigned yet
+                console.info('No mentor assigned to this student.');
+            }
         } catch (err) {
-            setError('Failed to load mentor dashboard data.');
+            console.error('Error loading mentor data:', err);
+            setError(err.message || 'Failed to load mentor dashboard data.');
         } finally {
             setLoading(false);
         }
@@ -290,6 +297,22 @@ const Mentor = () => {
             </div>
 
             {/* Mentor Details Section */}
+            {!loading && !mentor && !error && (
+                <div className="card" style={{ marginBottom: '24px', borderLeft: '4px solid var(--warning)' }}>
+                    <div className="card-body" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning)', padding: '12px', borderRadius: '12px' }}>
+                            <AlertCircle size={24} />
+                        </div>
+                        <div>
+                            <h4 style={{ margin: '0 0 4px 0', color: 'var(--text-main)' }}>No Mentor Assigned</h4>
+                            <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-muted)' }}>
+                                You haven't been assigned a mentor yet. Please contact your Department HOD or the office to get a mentor assigned to you.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {mentor && (
                 <div className="card" style={{ marginBottom: '24px' }}>
                     <div className="card-body">
