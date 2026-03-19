@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Users, Building, UserCircle, Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { BACKEND_URL } from '@/config/apiConfig';
 import { Poppins } from 'next/font/google';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'] });
@@ -55,7 +56,7 @@ export default function SplitLoginPage() {
 
     try {
       // Hitting the Unified Backend API
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dept-erp.onrender.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || BACKEND_URL;
       const res = await fetchWithRetry(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

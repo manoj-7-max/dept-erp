@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 interface Circular {
     _id: string;
@@ -16,7 +17,7 @@ export default function StudentCirculars() {
 
     useEffect(() => {
         if (token) {
-            fetch('https://dept-erp.onrender.com/api/portal/circulars', {
+            fetch(`${API_BASE_URL}/portal/circulars`, {
                 headers: { 'x-auth-token': token }
             })
                 .then(res => res.json())

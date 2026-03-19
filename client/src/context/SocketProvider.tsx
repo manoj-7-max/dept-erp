@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
+import { BACKEND_URL } from '@/config/apiConfig';
 
 interface SocketContextType {
     socket: Socket | null;
@@ -22,8 +23,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         // Only connect if user is authenticated
         if (!user || !token) return;
 
-        // Connect to the backend URL from environment variables, falling back to localhost
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dept-erp.onrender.com';
+        // Connect to the backend URL from environment variables, falling back to local
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || BACKEND_URL;
         const socketInstance = io(backendUrl);
 
         socketInstance.on('connect', () => {

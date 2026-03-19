@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 interface Request {
     _id: string;
@@ -18,7 +19,7 @@ export default function FacultyVerificationRequests() {
 
     useEffect(() => {
         if (token) {
-            fetch('https://dept-erp.onrender.com/api/faculty/requests/pending', {
+            fetch(`${API_BASE_URL}/faculty/requests/pending`, {
                 headers: { 'x-auth-token': token }
             })
                 .then(res => res.json())
@@ -29,7 +30,7 @@ export default function FacultyVerificationRequests() {
 
     const handleVerify = async (id: string, status: 'VERIFIED' | 'REJECTED') => {
         try {
-            const res = await fetch(`https://dept-erp.onrender.com/api/faculty/request/${id}/verify`, {
+            const res = await fetch(`${API_BASE_URL}/faculty/request/${id}/verify`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

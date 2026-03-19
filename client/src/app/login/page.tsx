@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { Poppins } from 'next/font/google';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 
@@ -32,7 +33,7 @@ export default function LoginPage() {
         // ------------------------------------------
 
         try {
-            const res = await fetch('https://dept-erp.onrender.com/api/auth/login', {
+            const res = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),

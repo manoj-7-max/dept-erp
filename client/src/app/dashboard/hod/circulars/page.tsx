@@ -16,6 +16,7 @@ import {
     Trash2,
     Download
 } from 'lucide-react';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 interface Circular {
     _id: string;
@@ -93,7 +94,7 @@ export default function CircularsManagement() {
         setCirculars(mockCirculars);
 
         // try {
-        //     const res = await fetch('https://dept-erp.onrender.com/api/portal/circulars', {
+        //     const res = await fetch(`${API_BASE_URL}/portal/circulars`, {
         //         headers: { 'x-auth-token': token || '' }
         //     });
         //     const data = await res.json();
@@ -107,7 +108,7 @@ export default function CircularsManagement() {
         e.preventDefault();
         alert('Circular formulation complete. Ready for API integration with new payload structure.');
         // try {
-        //     const res = await fetch('https://dept-erp.onrender.com/api/portal/circular', {
+        //     const res = await fetch(`${API_BASE_URL}/portal/circular`, {
         //         method: 'POST',
         //         headers: {
         //             'Content-Type': 'application/json',

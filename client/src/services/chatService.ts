@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const API_URL = 'https://dept-erp.onrender.com/api';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 const api = axios.create({
-    baseURL: API_URL,
+    baseURL: API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 export default function StaffComplaints() {
     const { token, user } = useAuth();
@@ -28,7 +29,7 @@ export default function StaffComplaints() {
     }, [token, activeTab]);
 
     const fetchMyComplaints = () => {
-        fetch('https://dept-erp.onrender.com/api/portal/complaints', {
+        fetch(`${API_BASE_URL}/portal/complaints`, {
             headers: { 'x-auth-token': token || '' }
         })
             .then(res => res.json())
@@ -39,7 +40,7 @@ export default function StaffComplaints() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('https://dept-erp.onrender.com/api/portal/complaint', {
+            const res = await fetch(`${API_BASE_URL}/portal/complaint`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token || '' },
                 body: JSON.stringify(formData)

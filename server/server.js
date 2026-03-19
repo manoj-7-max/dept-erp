@@ -10,14 +10,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: '*', // Configure this to your frontend URLs in production
+        origin: ['http://localhost:3000', 'https://kvcet-dept-portal.onrender.com'], // Configure this to your frontend URLs in production
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     }
 });
 
 // Middleware
 app.use(cors({
-    origin: '*',
+    origin: ['http://localhost:3000', 'https://kvcet-dept-portal.onrender.com'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -28,6 +28,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use((req, res, next) => {
     req.io = io;
     next();
+});
+
+// Health Check Route
+app.get('/', (req, res) => {
+    res.json({
+        status: 'Online',
+        message: 'Unified ERP Backend API is running successfully',
+        version: '1.0.1'
+    });
 });
 
 // Unified API Routes

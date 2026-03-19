@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { ArrowLeft, GraduationCap, Briefcase, BookOpen, Layers, Award, FileText, CheckCircle2, AlertTriangle, MessageSquareHeart } from 'lucide-react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 export default function FacultyAnalyticsDetail() {
     const { id } = useParams();
@@ -21,7 +22,7 @@ export default function FacultyAnalyticsDetail() {
                 if (!token) return;
 
                 // Fetch the real faculty from DB
-                const res = await fetch(`https://dept-erp.onrender.com/api/hod/faculty`, {
+                const res = await fetch(`${API_BASE_URL}/hod/faculty`, {
                     headers: { 'x-auth-token': token }
                 });
 

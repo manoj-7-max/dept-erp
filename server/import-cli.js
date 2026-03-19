@@ -5,7 +5,7 @@ const FormData = require('form-data');
 require('dotenv').config();
 
 // Configuration
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = process.env.API_URL || 'http://localhost:5000';
 const IMPORT_ENDPOINT = `${API_BASE_URL}/api/data/import-csv`;
 
 async function main() {

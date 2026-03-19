@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-// 1. Point to the Unified Backend on port 5000
+import { API_BASE_URL } from '@/config/apiConfig';
+
+// 1. Point to the Unified Backend
 const api = axios.create({
-    baseURL: 'https://dept-erp.onrender.com/api', 
+    baseURL: API_BASE_URL, 
 });
 
 // 2. Safely attach the authentication token

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 interface Faculty {
     _id: string;
@@ -30,7 +31,7 @@ export default function FacultyManagement() {
 
     useEffect(() => {
         if (token) {
-            fetch('https://dept-erp.onrender.com/api/hod/faculty', {
+            fetch(`${API_BASE_URL}/hod/faculty`, {
                 headers: { 'x-auth-token': token }
             })
                 .then(res => res.json())
@@ -52,7 +53,7 @@ export default function FacultyManagement() {
 
     const handleSave = async (id: string) => {
         try {
-            const res = await fetch(`https://dept-erp.onrender.com/api/hod/faculty/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/hod/faculty/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ export default function FacultyManagement() {
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure?')) {
             try {
-                const res = await fetch(`https://dept-erp.onrender.com/api/hod/faculty/${id}`, {
+                const res = await fetch(`${API_BASE_URL}/hod/faculty/${id}`, {
                     method: 'DELETE',
                     headers: { 'x-auth-token': token || '' }
                 });

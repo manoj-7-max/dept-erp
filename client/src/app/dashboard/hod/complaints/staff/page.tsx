@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Filter, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { API_BASE_URL } from '@/config/apiConfig';
 
 export default function HODComplaintDashboard() {
     const { token } = useAuth();
@@ -16,7 +17,7 @@ export default function HODComplaintDashboard() {
     }, [token]);
 
     const fetchComplaints = () => {
-        fetch('https://dept-erp.onrender.com/api/portal/complaints', {
+        fetch(`${API_BASE_URL}/portal/complaints`, {
             headers: { 'x-auth-token': token || '' }
         })
         .then(res => res.json())
@@ -29,7 +30,7 @@ export default function HODComplaintDashboard() {
             const bodyData: any = { status };
             if (comment) bodyData.newComment = comment;
 
-            const res = await fetch(`https://dept-erp.onrender.com/api/portal/complaint/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/portal/complaint/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token || '' },
                 body: JSON.stringify(bodyData)

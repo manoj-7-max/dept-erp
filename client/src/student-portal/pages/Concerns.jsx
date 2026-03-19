@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchConcerns, submitConcern, fetchFacultyList } from '../services/api';
+import { BACKEND_URL } from '@/config/apiConfig';
 import { MessageSquare, Send, CheckCircle, Clock, AlertCircle, FileText, Mic, StopCircle, Trash2 } from 'lucide-react';
 import './CardStyles.css';
 
@@ -452,14 +453,14 @@ const Concerns = () => {
                                                             </div>
                                                         )}
                                                         {concern.attachmentFile && (
-                                                            <a href={`https://dept-erp.onrender.com${concern.attachmentFile}`} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--primary)', padding: '4px 8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '4px', marginRight: '8px' }}>
+                                                            <a href={`${BACKEND_URL}${concern.attachmentFile}`} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--primary)', padding: '4px 8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '4px', marginRight: '8px' }}>
                                                                 <FileText size={14} /> View Document
                                                             </a>
                                                         )}
                                                         {concern.voiceFile && (
                                                             <div style={{ marginTop: '8px' }}>
                                                                 <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>Voice Recording:</span>
-                                                                <audio src={`https://dept-erp.onrender.com${concern.voiceFile}`} controls style={{ height: '30px', maxWidth: '200px' }} />
+                                                                <audio src={`${BACKEND_URL}${concern.voiceFile}`} controls style={{ height: '30px', maxWidth: '200px' }} />
                                                             </div>
                                                         )}
                                                     </td>
