@@ -62,8 +62,9 @@ app.use((err, req, res, next) => {
 });
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/university_erp')
-    .then(() => console.log('✅ Unified MongoDB Connected'))
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:Manoj%40007@erp.tando3f.mongodb.net/university_erp?appName=erp';
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('✅ Unified MongoDB Connected (Atlas Cluster)'))
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // Socket.io Connection Handler (Real-Time Notification Engine)

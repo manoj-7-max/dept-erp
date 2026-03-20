@@ -9,7 +9,14 @@ exports.getStudents = async (req, res) => {
         let query = {};
         if (section) query.section = section;
         
-        const students = await User.find({ role: 'student', ...query }).select('-password');
+        const studentsFromUsers = await User.find({ role: 'student', ...query }).select('-password').lean();
+        
+        // Also fetch from legacy Student collection to unify siloed data
+        const Student = require('../models/Student');
+        const legacyStudents = await Student.find(query).select('-password').lean();
+        
+        // Merge them
+        const students = [...studentsFromUsers, ...legacyStudents];
         res.json(students);
     } catch (err) {
         console.error(err.message);
@@ -93,7 +100,12 @@ exports.getPendingVerifications = async (req, res) => {
 
 exports.getMentees = async (req, res) => {
     try {
-        const mentees = await User.find({ role: 'student', mentorId: req.user.id }).select('-password');
+        const menteesFromUsers = await User.find({ role: 'student', mentorId: req.user.id }).select('-password').lean();
+        
+        const Student = require('../models/Student');
+        const menteesFromLegacy = await Student.find({ mentorId: req.user.id }).select('-password').lean();
+        
+        const mentees = [...menteesFromUsers, ...menteesFromLegacy];
         res.json(mentees);
     } catch (err) {
         console.error(err.message);
@@ -138,7 +150,7 @@ exports.scheduleMeeting = async (req, res) => {
         await meeting.save();
 
         // Emit real-time notification to student
-        const io = req.app.get('io');
+        const io = req.io; // Use the injected io from middleware
         if (io) {
             io.to(studentId.toString()).emit('notification', {
                 type: 'MENTORING_MEETING',

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, ExternalLink, Download, Clock, MapPin, User, Calendar, X, AlertCircle } from 'lucide-react';
 import { fetchCirculars, postCircular } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import './CircularPage.css';
 
 const CircularPage = () => {
+    const { user } = useAuth();
     const [circulars, setCirculars] = useState([]);
     const [loading, setLoading] = useState(true);
     
     // UI States
-    const [isFaculty, setIsFaculty] = useState(false); // Simulate Roles
+    const isStaff = user?.role === 'hod' || user?.role === 'faculty' || user?.role === 'class_incharge';
     const [activeTab, setActiveTab] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [showPostModal, setShowPostModal] = useState(false);
@@ -17,15 +19,17 @@ const CircularPage = () => {
     // Form State
     const [formData, setFormData] = useState({
         title: '',
-        category: 'Symposium',
+        category: 'Official',
         description: '',
+        content: '',
+        audience: 'ALL',
+        isPublic: true,
         event_date: '',
         deadline: '',
         location: '',
         organizer: '',
-        attachment_file: '',
+        attachment_url: '',
         registration_link: '',
-        posted_by: 'Dr. Jane Smith' // Default mock faculty
     });
 
     useEffect(() => {
@@ -49,7 +53,11 @@ const CircularPage = () => {
             const res = await postCircular(formData);
             setCirculars([res.data, ...circulars]);
             setShowPostModal(false);
-            setFormData({ ...formData, title: '', description: '', event_date: '', deadline: '', location: '', organizer: '', attachment_file: '', registration_link: '' });
+            setFormData({ 
+                title: '', category: 'Official', description: '', content: '', 
+                audience: 'ALL', isPublic: true, event_date: '', deadline: '', 
+                location: '', organizer: '', attachment_url: '', registration_link: '' 
+            });
         } catch (err) {
             console.error("Failed to post circular:", err);
             alert("Error posting circular. Please try again.");
@@ -57,7 +65,7 @@ const CircularPage = () => {
     };
 
     // Derived Data
-    const tabs = ['All', 'Symposium', 'Internship', 'Hackathon', 'Upcoming'];
+    const tabs = ['All', 'Symposium', 'Internship', 'Hackathon', 'Official', 'Academics'];
 
     const filteredCirculars = circulars.filter(c => {
         // Tab Filter
@@ -80,12 +88,14 @@ const CircularPage = () => {
 
     // Helpers
     const formatDate = (dateString) => {
+        if (!dateString) return 'TBA';
         return new Date(dateString).toLocaleDateString('en-GB', {
             day: 'numeric', month: 'short', year: 'numeric'
         });
     };
 
     const getDaysLeft = (deadline) => {
+        if (!deadline) return 0;
         const diff = new Date(deadline) - new Date();
         return Math.ceil(diff / (1000 * 60 * 60 * 24));
     };
@@ -100,21 +110,11 @@ const CircularPage = () => {
                         <Calendar size={28} color="var(--primary)" />
                         Circulars & Announcements
                     </h1>
-                    <p className="circular-subtitle">Discover opportunities, symposiums, and college events.</p>
+                    <p className="circular-subtitle">Discover opportunities, symposiums, and announcements.</p>
                 </div>
                 
                 <div className="circular-controls">
-                    {/* Role Toggle for Demonstration */}
-                    <div className="role-toggle">
-                        <button className={`role-btn ${!isFaculty ? 'active' : ''}`} onClick={() => setIsFaculty(false)}>
-                            Student View
-                        </button>
-                        <button className={`role-btn ${isFaculty ? 'active' : ''}`} onClick={() => setIsFaculty(true)}>
-                            Faculty View
-                        </button>
-                    </div>
-
-                    {isFaculty && (
+                    {isStaff && (
                         <button className="post-btn" onClick={() => setShowPostModal(true)}>
                             <Plus size={18} /> Post Circular
                         </button>
@@ -162,8 +162,8 @@ const CircularPage = () => {
 
                         return (
                             <div key={circ._id} className="c-card" data-cat={circ.category}>
-                                {circ.attachment_file && (
-                                    <img src={circ.attachment_file} className="c-card-img" alt={circ.title} />
+                                {circ.attachment_url && (
+                                    <img src={circ.attachment_url} className="c-card-img" alt={circ.title} />
                                 )}
                                 {isClosingSoon && <div className="c-urgent-tag">CLOSING SOON</div>}
                                 {!isClosingSoon && isNew && <div className="c-urgent-tag" style={{background:'#10b981'}}>NEW</div>}
@@ -189,7 +189,7 @@ const CircularPage = () => {
                                 <div className="c-footer">
                                     <div className="c-faculty">
                                         <User size={12} style={{verticalAlign:'middle', marginRight:'4px'}} /> 
-                                        {circ.organizer}
+                                        {circ.posted_by?.name || circ.organizer}
                                     </div>
                                     <button className="c-view-btn" onClick={() => setSelectedCircular(circ)}>
                                         View Details
@@ -201,8 +201,8 @@ const CircularPage = () => {
                 </div>
             )}
 
-            {/* Post Modal (Faculty Only) */}
-            {showPostModal && isFaculty && (
+            {/* Post Modal (Staff Only) */}
+            {showPostModal && isStaff && (
                 <div className="c-modal-overlay">
                     <div className="c-modal">
                         <div className="c-modal-header">
@@ -222,30 +222,52 @@ const CircularPage = () => {
                                     <div className="c-form-group">
                                         <label>Category</label>
                                         <select required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                                            <option value="Official">Official</option>
+                                            <option value="Academics">Academics</option>
                                             <option value="Symposium">Symposium</option>
                                             <option value="Internship">Internship</option>
                                             <option value="Hackathon">Hackathon</option>
                                         </select>
                                     </div>
                                     <div className="c-form-group">
-                                        <label>Organizer</label>
-                                        <input type="text" required value={formData.organizer} onChange={e => setFormData({...formData, organizer: e.target.value})} placeholder="e.g. CSE Department" />
+                                        <label>Target Audience</label>
+                                        <select required value={formData.audience} onChange={e => setFormData({...formData, audience: e.target.value})}>
+                                            <option value="ALL">All Roles</option>
+                                            <option value="STUDENT">Students Only</option>
+                                            <option value="FACULTY">Faculty Only</option>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div className="c-form-group">
-                                    <label>Description</label>
-                                    <textarea rows="4" required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Full details about the event..."></textarea>
+                                    <label>Brief Description</label>
+                                    <textarea rows="2" required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Short summary for the card view..."></textarea>
+                                </div>
+
+                                <div className="c-form-group">
+                                    <label>Full Content / Long Form Text</label>
+                                    <textarea rows="4" value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} placeholder="Full details, instructions, etc..."></textarea>
                                 </div>
 
                                 <div className="c-row">
                                     <div className="c-form-group">
-                                        <label>Event Date</label>
-                                        <input type="date" required value={formData.event_date} onChange={e => setFormData({...formData, event_date: e.target.value})} />
+                                        <label>Organizer</label>
+                                        <input type="text" required value={formData.organizer} onChange={e => setFormData({...formData, organizer: e.target.value})} placeholder="e.g. CSE Department" />
+                                    </div>
+                                    <div className="c-form-group" style={{display:'flex', alignItems:'center', gap:'10px', marginTop:'24px'}}>
+                                        <input type="checkbox" checked={formData.isPublic} onChange={e => setFormData({...formData, isPublic: e.target.checked})} id="isPublic" />
+                                        <label htmlFor="isPublic" style={{margin:0}}>Make Publicly Visible</label>
+                                    </div>
+                                </div>
+
+                                <div className="c-row">
+                                    <div className="c-form-group">
+                                        <label>Event Date (Optional)</label>
+                                        <input type="date" value={formData.event_date} onChange={e => setFormData({...formData, event_date: e.target.value})} />
                                     </div>
                                     <div className="c-form-group">
-                                        <label>Registration Deadline</label>
-                                        <input type="date" required value={formData.deadline} onChange={e => setFormData({...formData, deadline: e.target.value})} />
+                                        <label>Deadline (Optional)</label>
+                                        <input type="date" value={formData.deadline} onChange={e => setFormData({...formData, deadline: e.target.value})} />
                                     </div>
                                 </div>
 

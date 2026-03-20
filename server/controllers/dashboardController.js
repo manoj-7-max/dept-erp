@@ -7,6 +7,7 @@ const TimelineEvent = require('../models/TimelineEvent');
 const Student = require('../models/Student');
 const AcademicRecord = require('../models/AcademicRecord');
 const Activity = require('../models/Activity');
+const InternalMark = require('../models/InternalMark');
 
 // Get Attendance
 exports.getAttendance = async (req, res) => {

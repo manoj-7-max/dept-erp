@@ -41,7 +41,8 @@ const {
     addMentorNote,
     getMentoringTasks,
     addMentoringTask,
-    updateTaskStatus
+    updateTaskStatus,
+    getInternalMarks
 } = require('../controllers/studentController');
 
 router.route('/profile').get(protect, getProfile).put(protect, updateProfile);
